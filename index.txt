@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>QR Code Generator</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .box {
+      background: #fff;
+      padding: 20px;
+      width: 320px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    textarea, select, button {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    #qrImage {
+      margin-top: 15px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>QR Code Generator</h2>
+
+    <textarea id="qrText" placeholder="Enter text or link"></textarea>
+
+    <select id="qrSize">
+      <option value="150">150px</option>
+      <option value="200" selected>200px</option>
+      <option value="250">250px</option>
+    </select>
+
+    <button onclick="generateQR()">Generate QR</button>
+    <button onclick="downloadQR()" id="downloadBtn" disabled>Download</button>
+
+    <img id="qrImage" alt="QR Code" />
+  </div>
+
+  <script>
+    function generateQR() {
+      const text = document.getElementById("qrText").value.trim();
+      const size = document.getElementById("qrSize").value;
+      const qrImage = document.getElementById("qrImage");
+      const btn = document.getElementById("downloadBtn");
+
+      if (!text) {
+        alert("Please enter text!");
+        return;
+      }
+
+      const url = "https://api.qrserver.com/v1/create-qr-code/?data=" 
+                  + encodeURIComponent(text) 
+                  + "&size=" + size + "x" + size;
+
+      qrImage.src = url;
+      qrImage.style.display = "block";
+      btn.disabled = false;
+    }
+
+    function downloadQR() {
+      const qrImage = document.getElementById("qrImage");
+      const link = document.createElement("a");
+      link.href = qrImage.src;
+      link.download = "qr.png";
+      link.click();
+    }
+  </script>
+
+</body>
+</html>
